@@ -152,6 +152,7 @@
     <link rel="import" href="/elements/help.html">
     <link rel="import" href="/elements/icc.html">
     <link rel="import" href="/elements/downloads.html">
+    <link rel="import" href="/elements/whereismyfox.html">
   </head>
   <body class="skin-organic uninit">
     <!--
@@ -266,6 +267,9 @@
     <!-- Personalization :: Keyboard -->
     <section is="keyboard" role="region" id="keyboard" data-require-sub-panels="true"></section>
     <section is="keyboard-enabled-default" role="region" id="keyboard-enabled-default"></section>
+
+    <!-- Accounts :: Where Is My Fox -->
+    <section is="whereismyfox" role="region" id="whereismyfox"></section>
 
     <!-- Security :: Phone Lock :: PIN Input -->
     <section is="phoneLock-passcode" role="region" id="phoneLock-passcode"></section>
@@ -415,16 +419,20 @@
         </ul>
 
         <!-- Main :: Accounts -->
-        <header hidden="">
+        <header>
           <h2 data-l10n-id="accounts">Accounts</h2>
         </header>
-        <ul hidden="">
-          <li>
+        <ul>
+          <li hidden="">
             <a id="menuItem-persona" class="menu-item" href="#persona" data-l10n-id="persona">Persona</a>
           </li>
-          <li>
+          <li hidden="">
             <a id="menuItem-mail" class="menu-item" href="#mail" data-l10n-id="mail">Mail</a>
           </li>
+          <li>
+            <small id="whereismyfox-desc" class="menu-item-desc"></small>
+            <a id="menuItem-whereismyfox" class="menu-item" href="#whereismyfox"
+              data-l10n-id="whereismyfox">Where Is My Fox</a>
         </ul>
 
         <!-- Main :: Security & Privacy -->

@@ -1,0 +1,50 @@
+<element name="whereismyfox" extends="section">
+  <template>
+
+    <header>
+      <a href="#root"><span class="icon icon-back">back</span></a>
+      <h1 data-l10n-id="whereismyfox"> Where Is My Fox </h1>
+    </header>
+
+    <div>
+      <div id="whereismyfox-signin">
+        <ul>
+          <li class="description" data-l10n-id="whereismyfox-signup-description">
+          WhereIsMyFox allows you to locate, lock or erase your phone.
+          </li>
+          <li>
+          <button class="icon icon-view" id="whereismyfox-login"
+            data-l10n-id="whereismyfox-login">
+            Sign In or Create an Account
+          </button>
+          </li>
+        </ul>
+      </div>
+
+      <div id="whereismyfox-settings" hidden>
+        <ul>
+          <li id="whereismyfox-enabled">
+            <label class="pack-switch">
+              <input type="checkbox" data-ignore>
+              <span data-l10n-id="whereismyfox-enable">Enable Where Is My Fox</span>
+            </label>
+          </li>
+        </ul>
+
+        <header>
+          <h2 data-l10n-id="whereismyfox-about">About Where Is My Fox</h2>
+        </header>
+        <ul>
+          <li class="description" data-l10n-id="whereismyfox-settings-description">
+          WhereIsMyFox allows you to locate, lock or erase your phone from a web
+          site: <a class="link-text" href="#" data-href="http://whereismyfox.com">WhereIsMyFox.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script src="js/persona.js"></script>
+    <script src="js/whereismyfox.js"></script>
+
+  </template>
+</element>
