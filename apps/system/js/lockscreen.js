@@ -294,6 +294,10 @@ var LockScreen = {
       self.passCodeRequestTimeout = value;
     });
 
+    SettingsListener.observe(
+        'lockscreen.lock-message', '', function(value) {
+      self.setLockMessage(value);
+    });
   },
 
   /*
@@ -327,6 +331,11 @@ var LockScreen = {
     } else {
       this.unlockSoundEnabled = val;
     }
+  },
+
+  setLockMessage: function ls_setLockMessage(val) {
+    this.message.textContent = val;
+    this.message.hidden = (val === '');
   },
 
   /**
@@ -921,7 +930,7 @@ var LockScreen = {
         'area-handle', 'area-slide', 'media-container', 'passcode-code',
         'alt-camera', 'alt-camera-button', 'slide-handle',
         'passcode-pad', 'camera', 'accessibility-camera',
-        'accessibility-unlock', 'panel-emergency-call', 'canvas'];
+        'accessibility-unlock', 'panel-emergency-call', 'canvas', 'message'];
 
     var toCamelCase = function toCamelCase(str) {
       return str.replace(/\-(.)/g, function replacer(str, p1) {
