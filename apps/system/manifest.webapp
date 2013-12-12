@@ -108,6 +108,15 @@
       "rules": {
         "minimumAccessLevel": "certified"
       }
+    },
+    "whereismyfoxtestcomms": {
+      "description": "Manually trigger commands for testing",
+      "rules": {
+        "manifestURLs": [
+          "app://whereismyfox-test.gaiamobile.org/manifest.webapp",
+          "http://whereismyfox-test.gaiamobile.org:8080/manifest.webapp"
+        ]
+      }
     }
   },
   "datastores-owned": {

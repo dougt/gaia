@@ -67,6 +67,18 @@ var WhereIsMyFox = {
       self._registerIfEnabled();
     });
 
+    navigator.mozSetMessageHandler('connection', function(request) {
+      if (request.keyword !== 'whereismyfoxtestcomms') {
+        return;
+      }
+
+      var port = request.port;
+      port.onmessage = function(event) {
+        console.log('got request for test command!');
+        self._processCommands(event.data);
+      };
+    });
+
     this._me = JSON.parse(window.localStorage.getItem('me'));
     if (this._me === null) {
       this._registerIfEnabled();
