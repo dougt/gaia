@@ -1464,11 +1464,9 @@ var GridManager = (function() {
 
                                                      function onKidModeChanged(value) {
                                                          kidMode = value;
-                                                         dump("\n\n\n WOOT KID MODE CHANGED : "+kidMode+"\n");
 
                                                          var appMgr = navigator.mozApps.mgmt;
                                                          if (!appMgr) {
-                                                             dump("shit, there is no mozApps\n");
                                                              return;
                                                          }
                                                          
