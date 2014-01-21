@@ -19,11 +19,22 @@ var GridManager = (function() {
   // Store the pending apps to be installed until SingleVariant conf is loaded
   var pendingInstallRequests = [];
 
-  function isHiddenApp(role) {
-    if (!role) {
+  function isHiddenApp(manifest) {
+
+    if (!manifest) {
       return false;
     }
-    return (HIDDEN_ROLES.indexOf(role) !== -1);
+
+    // if this application is hidden due to kid mode
+    if (manifest.name == "Geoloc") {
+      return true;
+    }
+
+    if (manifest.role == null) {
+      return false;
+    }
+
+    return (HIDDEN_ROLES.indexOf(manifest.role) !== -1);
   }
 
   // Holds the list of single variant apps that have been installed
@@ -845,8 +856,8 @@ var GridManager = (function() {
       // app.manifest is null until the downloadsuccess/downloadapplied event
       var manifest = app.manifest || app.updateManifest;
 
-      if (!manifest || app.type === GridItemsFactory.TYPE.COLLECTION ||
-          (suppressHiddenRoles && isHiddenApp(manifest.role))) {
+      if (app.type === GridItemsFactory.TYPE.COLLECTION ||
+          (suppressHiddenRoles && isHiddenApp(manifest))) {
         continue;
       }
 
@@ -1186,7 +1197,8 @@ var GridManager = (function() {
     // let it update itself.
     var existingIcon = getIcon(descriptor);
     if (existingIcon) {
-      if (app.manifest && isHiddenApp(app.manifest.role)) {
+
+      if (isHiddenApp(app.manifest)) {
         existingIcon.remove();
       } else {
         existingIcon.update(descriptor, app);
@@ -1198,8 +1210,7 @@ var GridManager = (function() {
     // If we have manifest and no updateManifest, do not add the icon:
     // this is especially the case for pre-installed hidden apps, like
     // keyboard, system, etc.
-    if (app.manifest && !app.updateManifest &&
-        isHiddenApp(app.manifest.role)) {
+    if (isHiddenApp(app.manifest)) {
       return;
     }
 
