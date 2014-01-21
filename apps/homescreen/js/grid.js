@@ -19,6 +19,8 @@ var GridManager = (function() {
   // Store the pending apps to be installed until SingleVariant conf is loaded
   var pendingInstallRequests = [];
 
+  var kidMode = false;
+
   function isHiddenApp(manifest) {
 
     if (!manifest) {
@@ -27,7 +29,8 @@ var GridManager = (function() {
 
     // if this application is hidden due to kid mode
     if (manifest.name == "Geoloc") {
-      return true;
+      dump(" geolocation is hidden? " + kidMode);
+      return kidMode;
     }
 
     if (manifest.role == null) {
@@ -1452,6 +1455,32 @@ var GridManager = (function() {
       } else {
         doInit(options, callback);
       }
+
+        LazyLoader.load(['shared/js/settings_listener.js'],
+
+
+                        function loaded() {
+                            SettingsListener.observe('kidmode.enabled', false,
+
+                                                     function onKidModeChanged(value) {
+                                                         kidMode = value;
+                                                         dump("\n\n\n WOOT KID MODE CHANGED : "+kidMode+"\n");
+
+                                                         var appMgr = navigator.mozApps.mgmt;
+                                                         if (!appMgr) {
+                                                             dump("shit, there is no mozApps\n");
+                                                             return;
+                                                         }
+                                                         
+                                                         appMgr.getAll().onsuccess = function onsuccess(event) {
+                                                             var apps = event.target.result;
+                                                             apps.forEach(function eachApp(app) {
+                                                                 processApp(app, null, null);
+                                                             });
+                                                         }
+                                                     })
+                        }
+                       );
     },
 
     onDragStart: function gm_onDragSart() {
