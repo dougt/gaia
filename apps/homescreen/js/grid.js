@@ -20,7 +20,11 @@ var GridManager = (function() {
   var pendingInstallRequests = [];
 
   var kidMode = false;
-  var namesOfAppHonoringKidMode = ['Geoloc'];
+  var namesOfAppHonoringKidMode = ['Geoloc', 'Browser', 'Calendar', 'Camera', 'Clock', 'Phone',
+                                   'Contacts', 'Usage', 'E-Mail', 'FM Radio', 'Gallery', 'Music',
+                                   'Message', 'Video', 'Marketplace', 'Stage'];
+
+// don't add the thing that toggles kid mode
 
   function isHiddenApp(manifest) {
 
@@ -30,7 +34,7 @@ var GridManager = (function() {
 
     // if this application is hidden due to kid mode
     if (namesOfAppHonoringKidMode.indexOf(manifest.name) != -1) {
-        dump("changing geolocation back to == " + kidMode + "\n");
+        dump("changing " + manifest.name + " back to == " + kidMode + "\n");
 
       return kidMode;
     }
@@ -1475,7 +1479,8 @@ var GridManager = (function() {
                                                          appMgr.getAll().onsuccess = function onsuccess(event) {
                                                              var apps = event.target.result;
                                                              apps.forEach(function eachApp(app) {
-                                                                 processApp(app, null, null);
+                                                                 createOrUpdateIconForApp(app, null, null, null);
+//                                                                 processApp(app, null, EVME_PAGE_STATE_INDEX);
                                                              });
                                                          }
                                                      })
