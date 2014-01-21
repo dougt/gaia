@@ -20,6 +20,7 @@ var GridManager = (function() {
   var pendingInstallRequests = [];
 
   var kidMode = false;
+  var namesOfAppHonoringKidMode = ['Geoloc'];
 
   function isHiddenApp(manifest) {
 
@@ -28,8 +29,9 @@ var GridManager = (function() {
     }
 
     // if this application is hidden due to kid mode
-    if (manifest.name == "Geoloc") {
-      dump(" geolocation is hidden? " + kidMode);
+    if (namesOfAppHonoringKidMode.indexOf(manifest.name) != -1) {
+        dump("changing geolocation back to == " + kidMode + "\n");
+
       return kidMode;
     }
 
@@ -1464,7 +1466,7 @@ var GridManager = (function() {
 
                                                      function onKidModeChanged(value) {
                                                          kidMode = value;
-
+                                                         dump("onKidModeChanged == " + value + "\n");
                                                          var appMgr = navigator.mozApps.mgmt;
                                                          if (!appMgr) {
                                                              return;
