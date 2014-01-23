@@ -20,9 +20,10 @@ var GridManager = (function() {
   var pendingInstallRequests = [];
 
   var kidMode = false;
-  var namesOfAppHonoringKidMode = ['Geoloc', 'Browser', 'Calendar', 'Camera', 'Clock', 'Phone',
-                                   'Contacts', 'Usage', 'E-Mail', 'FM Radio', 'Gallery', 'Music',
-                                   'Message', 'Video', 'Marketplace', 'Stage'];
+  var namesOfAppHonoringKidMode =
+    ['Geoloc', 'Browser', 'Calendar', 'Camera', 'Clock', 'Phone',
+     'Contacts', 'Usage', 'E-Mail', 'FM Radio', 'Gallery', 'Music',
+     'Message', 'Video', 'Marketplace', 'Stage'];
 
 // don't add the thing that toggles kid mode
 
@@ -34,7 +35,7 @@ var GridManager = (function() {
 
     // if this application is hidden due to kid mode
     if (namesOfAppHonoringKidMode.indexOf(manifest.name) != -1) {
-        dump("changing " + manifest.name + " back to == " + kidMode + "\n");
+        dump('changing ' + manifest.name + ' back to == ' + kidMode + '\n');
 
       return kidMode;
     }
@@ -796,7 +797,7 @@ var GridManager = (function() {
   // Map 'bookmarkURL' -> Icon object.
   var bookmarkIcons;
   // Map 'manifestURL' + 'entry_point' to Icon object.
-  var appIcons;
+  var appIcons = {};
   // Map 'origin' -> app object.
   var appsByOrigin;
   // Map 'origin' for bookmarks -> bookmark object.
@@ -1185,6 +1186,33 @@ var GridManager = (function() {
     return descriptor;
   }
 
+  function displayOrHide(app) {
+    var descriptor = buildDescriptor(app);
+    var existingIcon = getIcon(descriptor);
+    if (app.manifest && existingIcon) {
+      if (isHiddenApp(app.manifest))
+        existingIcon.remove();
+      else {
+        var index = getFirstPageWithEmptySpace(index || 0);
+        var icon = existingIcon;
+
+        var iconLst = [icon];
+        while (iconLst.length > 0) {
+          icon = iconLst.shift();
+          index = icon.descriptor.desiredScreen || index;
+          if (index < pages.length) {
+            iconLst = iconLst.concat(pages[index].getMisplacedIcons(index));
+            pages[index].appendIcon(icon);
+          } else {
+            pageHelper.addPage([icon]);
+          }
+        }
+      }
+    }
+    markDirtyState();
+  }
+
+
   function createOrUpdateIconForApp(app, entryPoint, gridPageOffset,
                                     gridPosition) {
     // Make sure we update the icon/label when the app is updated.
@@ -1205,8 +1233,8 @@ var GridManager = (function() {
     // If there's an existing icon for this bookmark/app/entry point already,
     // let it update itself.
     var existingIcon = getIcon(descriptor);
-    if (existingIcon) {
-
+    if (app.manifest && existingIcon) {
+      dump('app is existion icon');
       if (isHiddenApp(app.manifest)) {
         existingIcon.remove();
       } else {
@@ -1462,30 +1490,26 @@ var GridManager = (function() {
         doInit(options, callback);
       }
 
-        LazyLoader.load(['shared/js/settings_listener.js'],
+      LazyLoader.load(['shared/js/settings_listener.js'],
+        function kidloaded() {
+          SettingsListener.observe('kidmode.enabled', false,
 
-
-                        function loaded() {
-                            SettingsListener.observe('kidmode.enabled', false,
-
-                                                     function onKidModeChanged(value) {
-                                                         kidMode = value;
-                                                         dump("onKidModeChanged == " + value + "\n");
-                                                         var appMgr = navigator.mozApps.mgmt;
-                                                         if (!appMgr) {
-                                                             return;
-                                                         }
-                                                         
-                                                         appMgr.getAll().onsuccess = function onsuccess(event) {
-                                                             var apps = event.target.result;
-                                                             apps.forEach(function eachApp(app) {
-                                                                 createOrUpdateIconForApp(app, null, null, null);
-//                                                                 processApp(app, null, EVME_PAGE_STATE_INDEX);
-                                                             });
-                                                         }
-                                                     })
-                        }
-                       );
+           function onKidModeChanged(value) {
+            kidMode = value;
+            var appMgr = navigator.mozApps.mgmt;
+            if (!appMgr) {
+              return;
+            }
+            appMgr.getAll().onsuccess = function onAppssuccess(event) {
+              var apps = event.target.result;
+              apps.forEach(function eachApp(app) {
+                displayOrHide(app);
+                // createOrUpdateIconForApp(app, null, null, null);
+                // processApp(app, null, EVME_PAGE_STATE_INDEX);
+              });
+            };
+          });
+        });
     },
 
     onDragStart: function gm_onDragSart() {

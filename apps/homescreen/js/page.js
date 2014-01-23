@@ -420,6 +420,7 @@ Icon.prototype = {
   },
 
   update: function icon_update(descriptor, app) {
+    dump('app ' + app.manifest.name + ' is updated');
     this.app = app;
     this.updateAppStatus(app);
     var oldDescriptor = this.descriptor;
@@ -441,6 +442,7 @@ Icon.prototype = {
         descriptor.localizedName != oldDescriptor.localizedName) {
       this.translate();
     }
+    dump('app ' + app.manifest.name + ' is updated');
   },
 
   showDownloading: function icon_showDownloading() {
@@ -457,7 +459,9 @@ Icon.prototype = {
   },
 
   remove: function icon_remove() {
-    this.container.parentNode.removeChild(this.container);
+    if (this.container.parentNode)
+      this.container.parentNode.removeChild(this.container);
+    dump('app ' + this.descriptor.name + ' is removed');
   },
 
   /*
