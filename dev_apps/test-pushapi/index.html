@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="pragma" content="no-cache">
+  <title>Push</title>
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: red;
+    }
+  </style>
+
+  <script>
+    function debug(str) {
+      dump(str + "\n");
+    }
+
+    var swr;
+    function updateUI(endpoint) {
+      document.getElementById("registrations").innerHTML = endpoint;
+    }
+
+    function subscribe() {
+      navigator.serviceWorker.register('sw.js').then(
+        function(serviceWorkerRegistration) {
+          swr = serviceWorkerRegistration;
+          swr.pushManager.subscribe().then(
+            function(pushSubscription) {
+              debug("To send a push notification to this app:\n  curl -X PUT -d'{version=1}' " + pushSubscription.endpoint + "\n\n")
+              updateUI(pushSubscription.endpoint);
+            }, function(error) {
+              debug(error);
+              updateUI("");
+            }
+          );
+        }
+      );
+    }
+
+    function unsubscribe() {
+      swr.pushManager.unsubscribe().then(
+        function(pushSubscription) {
+          updateUI("");
+        }, function(error) {
+          debug(error);
+          updateUI("");
+        }
+      );
+    }
+  </script>
+</head>
+
+<body>
+  <p>Push Notifications</p>
+  <button onclick="subscribe();">Subscribe!</button>
+  <button onclick="unsubscribe();">Unsubscribe!</button>
+  <p>Registrations</p>
+  <div id='registrations'></div>
+</body>
+
+</html>

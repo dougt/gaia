@@ -16,6 +16,7 @@ dev_apps/test-container
 dev_apps/test-iac-publisher
 dev_apps/test-iac-subscriber
 dev_apps/test-otasp
+dev_apps/test-pushapi
 dev_apps/test-receiver-1
 dev_apps/test-receiver-2
 dev_apps/test-receiver-inline
